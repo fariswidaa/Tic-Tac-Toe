@@ -5,15 +5,62 @@ public class Game {
     private char grid[][];
     private char turn;
 
-    private GameUI gui;
+    private static GameUI gui;
+
+    /**
+     * Main function
+     *
+     * @param args command line arguments
+     */
+    public static void main(String args[]) {
+        Game game = new Game();
+        gui = new GameUI(game);
+    }
+
 
     public Game() {
         newGame(false);
     }
 
-    public String checkGameWinner(char[][] grid2) {
+    public String checkGameWinner(char[][] grid) {
+        String result = "None";
+        Character[] symbol = {'x', 'o'};
+        String[] message = {"X wins", "O wins"};
 
+        for (int j = 0; j < symbol.length; j++) {
+
+            // Check for diagonal
+            if (grid[0][0] == symbol[j] && grid[1][1] == symbol[j] && grid[2][2] == symbol[j])
+                return message[j];
+            if (grid[0][2] == symbol[j] && grid[1][1] == symbol[j] && grid[2][0] == symbol[j])
+                return message[j];
+
+            for (int i = 0; i < grid.length; i++) {
+                // Check for rows
+                if (grid[0][i] == symbol[j] && grid[1][i] == symbol[j] && grid[2][i] == symbol[j])
+                    return message[j];
+
+                // Check for columns
+                if (grid[i][0] == symbol[j] && grid[i][1] == symbol[j] && grid[i][2] == symbol[j])
+                    return message[j];
+            }
+
+        }
+        // Check for tie
+        int total = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                if (!(grid[i][j] == '-'))
+                    total += 1;
+            }
+        }
+        if (total == grid.length * grid.length)
+            return "Tie";
+
+
+        return result;
     }
+
 
 
     //  a method that initializes the game , and set the turn to the X
@@ -37,7 +84,7 @@ public class Game {
             }
         }
         freeSpots = 9;
-        turn = 'X';
+        turn = 'x';
     }
 
     public boolean playAt(int i, int j) {
